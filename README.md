@@ -17,3 +17,10 @@ Tools:
   - SDK
   - Zybo featuring Zynq-7010
 
+Repository structure:
+  - Vivado projects:
+    - "PlatformHW_1_GPIO_wrapper.tcl": may be used to load and modify Vivado project (modify hardware and board configuration).
+  - SDK applications: they run in ARM cores basing on PlatformHW_1_GPIO Vivado platform and PlatformHW_1_GPIO_bsp.
+    - "App_1_GPIOAndHelloWorld".
+    - "App_2_ARM_Private_Interrupt".
+    - Apps 1, 2 use "PlatformHW_1_GPIO_wrapper" for platform configuration / bitstream and "PlatformHW_1_GPIO_bsp" as bsp.
