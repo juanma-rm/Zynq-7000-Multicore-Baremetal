@@ -1,9 +1,9 @@
 // -------------------------------------------------------------------------
 //
-// Application 2. Use of ARM-core-private interruptions (single core).
-// A ARM-core-private timer is set up to interrupt each one second.
-// The core itself attends the interruption (TimerIntrHandler ISR) printing
-// helloword and switching the LEDs status.
+// Application 3. Use of ARM-core-private interruptions (dual core). Core A1
+//
+// Core 1 sets up its timer to interrupt each half second and attends that
+// interruption by switching the LEDs state.
 //
 // Zybo Zynq-7010
 //
@@ -32,9 +32,9 @@
 #define TIMER_DEVICE_ID		XPAR_XSCUTIMER_0_DEVICE_ID
 #define TIMER_INTERR_ID		XPAR_SCUTIMER_INTR
 #define TIMER_COUNT_MAX		0xFFFFFFFFU
-#define FREQ_TIMER_HZ		( XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2 )
+#define FREQ_TIMER_HZ		( XPAR_PS7_CORTEXA9_1_CPU_CLK_FREQ_HZ / 2 )
 	// FREQ_TIMER_HZ -> For Zynq-7000, private timer clk = Cortex A9 CPU clk / 2
-#define TIMER_COUNT_1SEC	FREQ_TIMER_HZ		// For prescaler = 0
+#define TIMER_COUNT_1_2SEC	FREQ_TIMER_HZ/2		// For prescaler = 0
 
 // -------------------------------------------------------------------------
 // STRUCTS AND ENUMS
@@ -76,7 +76,7 @@ int main()
 
 	// Initialization - Platform
 
-	init_platform();
+	//init_platform();	// Platform initialized by core 0
 
 	// Initialization - GPIO
 
@@ -88,7 +88,7 @@ int main()
     TMRConfigPtr = XScuTimer_LookupConfig(TIMER_DEVICE_ID);	// Get CPU-private timer parameters
     XScuTimer_CfgInitialize(&TimerHandler, TMRConfigPtr, TMRConfigPtr->BaseAddr);	// Config timer handler
     XScuTimer_SelfTest(&TimerHandler);
-	XScuTimer_LoadTimer(&TimerHandler, TIMER_COUNT_1SEC);	// Timer will count from TIMER_COUNT_1SEC to zero
+	XScuTimer_LoadTimer(&TimerHandler, TIMER_COUNT_1_2SEC);	// Timer will count from TIMER_COUNT_1SEC to zero
 	XScuTimer_SetPrescaler(&TimerHandler, 0);
 	XScuTimer_EnableAutoReload(&TimerHandler);
 	XScuTimer_Start(&TimerHandler);							// Timer start to count
@@ -106,7 +106,7 @@ int main()
 
     // End
 
-    cleanup_platform();
+    //cleanup_platform();	// Platform cleaned by core 0
     return 0;
 }
 
@@ -147,10 +147,10 @@ static void TimerIntrHandler(void *CallBackRef)
 	XScuTimer *TimerInstancePtr = (XScuTimer *) CallBackRef;
 	XScuTimer_ClearInterruptStatus(TimerInstancePtr);
 
-	// Print data and switch LEDs states
-	printf("Timer interrupt. 1 sec\n\r");
+	// Switch LEDs states
 	switch_data =  ~switch_data;
 	XGpio_DiscreteWrite(&output, 1,switch_data);
+
 }
 
 

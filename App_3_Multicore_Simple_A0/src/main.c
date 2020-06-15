@@ -1,9 +1,9 @@
 // -------------------------------------------------------------------------
 //
-// Application 2. Use of ARM-core-private interruptions (single core).
-// A ARM-core-private timer is set up to interrupt each one second.
-// The core itself attends the interruption (TimerIntrHandler ISR) printing
-// helloword and switching the LEDs status.
+// Application 3. Use of ARM-core-private interruptions (dual core). Core A0
+//
+// Core 0 enables platform, sets up its timer to interrupt each second and
+// attends that interruption by printing helloworld.
 //
 // Zybo Zynq-7010
 //
@@ -20,7 +20,6 @@
 #include "xscutimer.h"
 #include "Xil_exception.h"
 #include "Xscugic.h"
-#include <xgpio.h>
 
 // -------------------------------------------------------------------------
 // DEFINES
@@ -45,11 +44,6 @@
 // -------------------------------------------------------------------------
 // GLOBAL DATA
 // -------------------------------------------------------------------------
-
-// GPIO
-
-XGpio output;
-int switch_data = 0;
 
 // Timer / Interruptions
 
@@ -77,11 +71,6 @@ int main()
 	// Initialization - Platform
 
 	init_platform();
-
-	// Initialization - GPIO
-
-	XGpio_Initialize(&output, XPAR_AXI_GPIO_0_DEVICE_ID);	// Initialize output XGpio variable
-	XGpio_SetDataDirection(&output, 1, 0x0);				// Set first channel tristate buffer to output
 
 	// Initialization - Timer
 
@@ -147,10 +136,9 @@ static void TimerIntrHandler(void *CallBackRef)
 	XScuTimer *TimerInstancePtr = (XScuTimer *) CallBackRef;
 	XScuTimer_ClearInterruptStatus(TimerInstancePtr);
 
-	// Print data and switch LEDs states
-	printf("Timer interrupt. 1 sec\n\r");
-	switch_data =  ~switch_data;
-	XGpio_DiscreteWrite(&output, 1,switch_data);
+	// Print data
+	xil_printf("Timer interrupt CPU0. 1 sec\n\r");
+
 }
 
 
