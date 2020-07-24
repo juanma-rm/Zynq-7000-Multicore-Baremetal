@@ -1,0 +1,8 @@
+//arch = zynq; split = false; format = BIN
+the_ROM_image:
+{
+	[bootloader]C:\Users\Shorky\MasterSEEI\TFM\Vivado\PlatformHW_1_GPIO\PlatformHW_1_GPIO.sdk\FSBL\Debug\FSBL.elf
+	C:\Users\Shorky\MasterSEEI\TFM\Vivado\PlatformHW_1_GPIO\PlatformHW_1_GPIO.sdk\PlatformHW_1_GPIO_wrapper_hw_platform_0\PlatformHW_1_GPIO_wrapper.bit
+	C:\Users\Shorky\MasterSEEI\TFM\Vivado\PlatformHW_1_GPIO\PlatformHW_1_GPIO.sdk\App_7_Multicore_SharedMemory_L2_A0\Debug\App_7_Multicore_SharedMemory_L2_A0.elf
+	C:\Users\Shorky\MasterSEEI\TFM\Vivado\PlatformHW_1_GPIO\PlatformHW_1_GPIO.sdk\App_7_Multicore_SharedMemory_L2_A1\Debug\App_7_Multicore_SharedMemory_L2_A1.elf
+}
